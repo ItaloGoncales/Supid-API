@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 
 var subCategorySchema = new Schema({
     _id: String,
-    name: String
+    name: String,
+    category: { type: String, ref: "Category" }
 }, {
     collection: "subCategory",
     versionKey: false

@@ -4,3 +4,5 @@ package-lock.json
 .vscode/launch.json
 npm-debug.log
 yarn-error.log
+scripts/*
+.env

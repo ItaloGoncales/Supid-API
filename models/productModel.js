@@ -1,29 +1,32 @@
 "use strict";
 var mongoose = require("mongoose");
+var crypto = require("crypto");
 var Schema = mongoose.Schema;
 
 var productSchema = new Schema({
-    department: { type: "ObjectId", ref: "Department" },
-    category: { type: "ObjectId", ref: "Category" },
-    subcategory: { type: "ObjectId", ref: "SubCategory" },
+    department: { type: String, ref: "Department" },
+    category: { type: String, ref: "Category" },
+    subCategory: { type: String, ref: "SubCategory" },
     title: String,
     brand: String,
     image: String,
-    // price: Schema.Types.Decimal128,
-    price: "Decimal128",
-    oldPrice: "Decimal128",
-    currency: {
-        type: String,
-        enum: ["BRL"],
-        default: "BRL"
-    },
-    active: {
-        type: Boolean,
-        default: true
-    }
+    code: String,
+    tcode: String,
 }, {
     collection: "product",
     versionKey: false
+});
+
+productSchema.pre("save", async function save(next) {
+    if (!this.isModified("title")) return next();
+
+    this.code = crypto.createHash("md5").update(
+        this.title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[\s\t\n\r\-*".,]/g, "").toLowerCase()
+    ).digest("hex");
+
+    this.tcode = this.code.substr(0, 8).toUpperCase();
+
+    next();
 });
 
 module.exports = mongoose.model("Product", productSchema);

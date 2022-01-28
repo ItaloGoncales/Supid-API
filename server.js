@@ -3,17 +3,21 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 
+var dotenv = require("dotenv");
+dotenv.config();
+
 var app = express();
 var port = process.env.PORT || 3000;
 
 const Product = require("./models/productModel");
+const CustomerProduct = require("./models/customerProductModel");
 const Department = require("./models/departmentModel");
 const Category = require("./models/categoryModel");
 const SubCategory = require("./models/subCategoryModel");
 const Customer = require("./models/customerModel");
 
 mongoose.Promise = global.Promise;
-mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PWD}@cluster0-hvz1i.gcp.mongodb.net/${process.env.MONGO_DATABASE}_${process.env.NODE_ENV}?retryWrites=true&w=majority`, {
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PWD}@${process.env.MONGO_HOST}/${process.env.MONGO_DATABASE}_${process.env.NODE_ENV}?retryWrites=true&w=majority`, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useFindAndModify: false,
